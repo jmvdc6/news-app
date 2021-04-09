@@ -1,65 +1,48 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Header from "../components/Header";
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Home({ topStories, entertainment }) {
+  console.log(entertainment);
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    <div>
+      <Header />
+      <main className='site_content'>
+        <div className=''>
+          <section className='main_content'></section>
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
-  )
+  );
 }
+
+export const getServerSideProps = async () => {
+  const apiResponse = await fetch(
+    `https://newsapi.org/v2/top-headlines?country=us`,
+    {
+      headers: {
+        Authorization: `Bearer 2661d5f8160446879369681b2cb660d2`,
+      },
+    }
+  );
+  const apiJson = await apiResponse.json();
+  const { articles } = apiJson;
+
+  const entertainmentResponse = await fetch(
+    `https://newsapi.org/v2/top-headlines?country=us&category=entertainment&pageSize=3&page=1`,
+    {
+      headers: {
+        Authorization: `Bearer 2661d5f8160446879369681b2cb660d2`,
+      },
+    }
+  );
+
+  const entertainmentJson = await entertainmentResponse.json();
+
+  return {
+    props: {
+      topStories: articles,
+      entertainment: entertainmentJson,
+    },
+  };
+};
