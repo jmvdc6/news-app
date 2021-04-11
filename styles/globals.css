@@ -43,11 +43,17 @@ a:not([class]) {
   text-decoration-skip-ink: auto;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 /* Make images easier to work with */
 img,
 picture {
   max-width: 100%;
   display: block;
+  object-fit: cover;
 }
 
 /* Inherit fonts for inputs and buttons */
